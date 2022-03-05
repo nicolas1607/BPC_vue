@@ -20,7 +20,11 @@
           <h1>{{ title }}</h1>
         </div>
         <div v-if="nbTours" class="nav-list">
-          <p>{{ parseInt(this.nbTours) + 1 }}/{{ this.totalMatch }}</p>
+          <p>
+            {{ parseInt(this.nbTours) + 1 }}/{{
+              JSON.parse(this.totalMatch).length
+            }}
+          </p>
         </div>
       </nav>
     </div>

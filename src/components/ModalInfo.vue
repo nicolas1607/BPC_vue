@@ -1,6 +1,6 @@
 <template>
   <div
-    id="modal-danger"
+    id="modal-info"
     class="overlap animate__fadeIn animate__delay-0.5s"
     hidden
   >
@@ -28,7 +28,7 @@ export default {
   },
   methods: {
     closeModalAlert() {
-      const modal = document.querySelector("#modal-danger");
+      const modal = document.querySelector("#modal-info");
       modal.hidden = true;
     },
   },

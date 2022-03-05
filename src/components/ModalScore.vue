@@ -153,7 +153,7 @@ export default {
       document.querySelector("#team-score-valeur2").value = "0";
       // Augmente le nbTours
       this.$parent.nbTours++;
-      this.$store.commit("addNbTours");
+      localStorage.nbTours++;
       localStorage.nbTours = this.$parent.nbTours;
       // Supprimer le match de listMatch
       const matchs = [];
@@ -167,9 +167,8 @@ export default {
           matchs.push([match[0], match[1]]);
         }
       }
-      let parsed = JSON.stringify(matchs);
-      localStorage.setItem("listMatch", parsed);
-      this.$store.commit("setListMatch", matchs);
+      localStorage.setItem("listMatch", JSON.stringify(matchs));
+      localStorage.setItem("listMatch", JSON.stringify(matchs));
       if (localStorage.getItem("listMatch")) {
         this.$parent.listMatch = JSON.parse(localStorage.getItem("listMatch"));
       }
@@ -204,9 +203,7 @@ export default {
         }
       }
 
-      parsed = JSON.stringify(result);
-      localStorage.setItem("teams", parsed);
-      this.$store.commit("setTeam", result);
+      localStorage.setItem("teams", JSON.stringify(result));
       if (localStorage.getItem("teams")) {
         this.$parent.teams = JSON.parse(localStorage.getItem("teams"));
       }

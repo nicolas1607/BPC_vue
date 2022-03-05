@@ -147,23 +147,12 @@ export default {
   },
   beforeUnmount() {
     this.init();
-
-    // INTEGER
-    localStorage.nbTeam = this.$store.getters.getNbTeam;
-    localStorage.nbTours = this.$store.getters.getNbTours;
-    localStorage.totalMatch = this.$store.getters.getTotalMatch;
-
-    // ARRAY
-    let parsed = JSON.stringify(this.$store.getters.getTeam);
-    localStorage.setItem("teams", parsed);
-    parsed = JSON.stringify(this.$store.getters.getListMatch);
-    localStorage.setItem("listMatch", parsed);
   },
   methods: {
     openModalInfo(title, text) {
       document.querySelector("#modal-info-title").innerHTML = title;
       document.querySelector("#modal-info-text").innerHTML = text;
-      document.querySelector("#modal-danger").hidden = false;
+      document.querySelector("#modal-info").hidden = false;
     },
     hiddenMenu() {
       const menu = document.querySelector("#menu");
@@ -173,10 +162,10 @@ export default {
     },
     addTeam: function () {
       this.teams.push(
-        <NewTeam id={this.$store.getters.getTeamId} remove={this.removeTeam} />
+        <NewTeam id={localStorage.teamId} remove={this.removeTeam} />
       );
-      this.$store.commit("addNbTeam");
-      this.$store.commit("incrementTeamId");
+      localStorage.nbTeam++;
+      localStorage.teamId++;
     },
     displayParam: function () {
       const params = document.querySelector("#params");
@@ -222,28 +211,32 @@ export default {
     },
     // initialise la partie avec toutes les équipes
     init() {
-      const store = this.$store.getters;
-      if (store.getStarted == false) {
+      if (localStorage.started == "false") {
         // team <array> & resFinal <array>
         let res = Array.from(this.getTeam(new Map()), ([name, value]) => ({
           name,
           value,
         }));
-        this.$store.commit("setTeam", res);
-        this.$store.commit("setResFinal", res);
+        console.log(res);
+        localStorage.setItem("team", JSON.stringify(res));
+        localStorage.setItem("resFinal", JSON.stringify(res));
       }
-      if (store.getListMatch == [] || store.getPoolFinish == false) {
-        this.$store.commit("setListMatch", this.listGame());
-        this.$store.commit("setTotalMatch", store.getListMatch.length);
+      if (localStorage.listMatch == "" || localStorage == "") {
+        localStorage.setItem("listMatch", JSON.stringify(this.listGame()));
+        localStorage.setItem("totalMatch", JSON.stringify(this.listGame()));
       }
-      if (store.getTeam.size < 2 && store.getPoolFinish == true)
-        this.$store.commit("setGameFinish", true);
-      if (store.getGameFinish == true)
-        this.$store.commit("setTeam", store.getResFinal);
+      if (
+        JSON.parse(localStorage.getItem("team")).size < 2 &&
+        localStorage.poolFinish == "true"
+      )
+        localStorage.gameFinish = "true";
+      localStorage.getGameFinish = "true";
+      if (localStorage.gameFinish == "true")
+        localStorage.setItem("team", localStorage.resFinal);
     },
     // récupère toutes les équipes
     getTeam: function (team) {
-      for (let i = 1; i <= this.$store.getters.getNbTeam; i++) {
+      for (let i = 1; i <= localStorage.nbTeam; i++) {
         let players = [];
         const teamName = document.querySelector("#team-input" + i).value;
         const listPlayers = document
@@ -259,11 +252,10 @@ export default {
     },
     // Créer une liste de match aléatoire
     listGame: function () {
-      const store = this.$store.getters;
       let res = "";
       let match = [];
-      for (let i = 1; i <= store.getNbTeam; i++) {
-        for (let j = 1; j <= store.getNbTeam; j++) {
+      for (let i = 1; i <= localStorage.nbTeam; i++) {
+        for (let j = 1; j <= localStorage.nbTeam; j++) {
           if (i != j) {
             if (res.includes([j, i]) == false) {
               res += "," + i + "," + j;

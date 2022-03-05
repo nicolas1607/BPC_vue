@@ -35,13 +35,13 @@
 
 <script>
 import Choices from "../views/Choices.vue";
-import NewPlayer from "./NewPlayer.vue";
+import NewTeamPlayer from "./NewTeamPlayer.vue";
 
 export default {
   name: "NewTeam",
   props: ["id", "remove"],
   components: {
-    NewPlayer,
+    NewTeamPlayer,
     Choices,
   },
   data() {
@@ -50,15 +50,15 @@ export default {
     };
   },
   mounted() {
-    this.players.push(NewPlayer);
+    this.players.push(NewTeamPlayer);
   },
   methods: {
     addPlayer() {
-      this.players.push(NewPlayer);
+      this.players.push(NewTeamPlayer);
     },
     removeTeam() {
-      this.$store.commit("removeNbTeam");
-      this.$store.commit("reduceTeamId");
+      localStorage.nbTeam--;
+      localStorage.teamId--;
       this.$el.className = "animate__animated animate__fadeOutRight";
       this.$el.style.display = "none";
       this.$el.style.display = "block";

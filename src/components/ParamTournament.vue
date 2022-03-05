@@ -191,14 +191,12 @@ export default {
     // WINNER
     const win = document.querySelector("#win");
     win.addEventListener("change", () => {
-      this.$store.commit("setWin", win.value);
-      localStorage.win = this.$store.getters.getWin;
+      localStorage.win = win.value;
     });
     // LOOSE
     const loose = document.querySelector("#loose");
     loose.addEventListener("change", () => {
-      this.$store.commit("setLoose", loose.value);
-      localStorage.loose = this.$store.getters.getLoose;
+      localStorage.loose = loose.value;
     });
   },
   methods: {

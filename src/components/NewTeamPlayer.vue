@@ -18,7 +18,7 @@
 
 <script>
 export default {
-  name: "NewPlayer",
+  name: "NewTeamPlayer",
   methods: {
     removePlayer() {
       this.$el.remove();

@@ -27,46 +27,30 @@ export default {
   },
   mounted() {
     // INTEGER
-    this.$store.commit("setTeamId", 2);
-    localStorage.teamId = this.$store.getters.getTeamId;
-    this.$store.commit("setNbTeam", 1);
-    localStorage.nbTeam = this.$store.getters.getNbTeam;
-    this.$store.commit("setNbTours", 0);
-    localStorage.nbTours = this.$store.getters.getNbTours;
-    this.$store.commit("setTotalMatch", 0);
-    localStorage.totalMatch = this.$store.getters.getTotalMatch;
+    localStorage.teamId = 2;
+    localStorage.nbTeam = 1;
+    localStorage.nbTours = 0;
+    localStorage.totalMatch = 0;
 
     // STRINGS //
-    this.$store.commit("setPlay1", "");
-    localStorage.play1 = this.$store.getters.getPlay1;
-    this.$store.commit("setPlay2", "");
-    localStorage.play2 = this.$store.getters.getPlay2;
+    localStorage.play1 = "";
+    localStorage.play2 = "";
 
     // BOOLEAN //
-    this.$store.commit("setStarted", false);
-    localStorage.started = this.$store.getters.getStarted;
-    this.$store.commit("setPoolFinish", false);
-    localStorage.poolFinish = this.$store.getters.getPoolFinish;
-    this.$store.commit("setGameFinish", false);
-    localStorage.gameFinish = this.$store.getters.getGameFinish;
+    localStorage.started = "false";
+    localStorage.poolFinish = "false";
+    localStorage.gameFinish = "false";
 
     // ARRAYS //
-    this.$store.commit("setTeam", []);
-    localStorage.team = this.$store.getters.getTeam;
-    this.$store.commit("setResFinal", []);
-    localStorage.resFinal = this.$store.getters.getResFinal;
-    this.$store.commit("setListMatch", []);
-    localStorage.listMatch = this.$store.getters.getListMatch;
+    localStorage.team = "";
+    localStorage.resFinal = "";
+    localStorage.listMatch = "";
 
     // SETTINGS //
-    this.$store.commit("setWin", "D");
-    localStorage.win = this.$store.getters.getWin;
-    this.$store.commit("setEqual", "1");
-    localStorage.equal = this.$store.getters.getEqual;
-    this.$store.commit("setLoose", "0");
-    localStorage.loose = this.$store.getters.getLoose;
-    this.$store.commit("setRandomTeam", false);
-    localStorage.randomTeam = this.$store.getters.getRandomTeam;
+    localStorage.win = "D";
+    localStorage.equal = "1";
+    localStorage.loose = "0";
+    localStorage.randomTeam = "false";
   },
   beforeUnmount() {
     this.newGame();

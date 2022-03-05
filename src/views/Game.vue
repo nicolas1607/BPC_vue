@@ -179,42 +179,20 @@ export default {
     });
   },
   mounted() {
-    localStorage.win = this.$store.getters.getWin;
-    localStorage.equal = this.$store.getters.getEqual;
-    localStorage.loose = this.$store.getters.getLoose;
     // INTEGER //
-    if (localStorage.nbTours) {
-      this.nbTours = localStorage.nbTours;
-    }
-    if (localStorage.totalMatch) {
-      this.totalMatch = localStorage.totalMatch;
-    }
+    if (localStorage.nbTours) this.nbTours = localStorage.nbTours;
+    if (localStorage.totalMatch) this.totalMatch = localStorage.totalMatch;
 
     // OBJECTS
-    if (localStorage.getItem("teams")) {
-      this.teams = JSON.parse(localStorage.getItem("teams"));
-    }
-    if (localStorage.getItem("listMatch")) {
+    if (localStorage.getItem("teams"))
+      this.teams = JSON.parse(localStorage.getItem("team"));
+    if (localStorage.getItem("listMatch"))
       this.listMatch = JSON.parse(localStorage.getItem("listMatch"));
-    }
-
-    // STRING
-    if (localStorage.play1) {
-      this.play1 = localStorage.play1;
-    }
-    if (localStorage.play2) {
-      this.play2 = localStorage.play2;
-    }
 
     // JS_SORTABLE
     let sortableScript = document.createElement("link");
     sortableScript.setAttribute("href", "../assets/js/sorttable.js");
     document.head.appendChild(sortableScript);
-    console.log(this.teams);
-    // FIX ["test", array(), null] => ["test", array(), 0]
-    for (let team of this.teams) {
-      console.log(team.value[2]);
-    }
   },
   updated() {
     // Increment nbTours / totalMatch
@@ -231,7 +209,6 @@ export default {
       }
     }
     this.sortedData();
-    console.log(this.teams);
   },
   methods: {
     hiddenMenu() {
@@ -243,7 +220,9 @@ export default {
     getTeamName(id) {
       let res;
       for (let team of this.teams) {
-        if (team["name"] == id) res = team["value"][0];
+        if (team["name"] == id) {
+          res = team["value"][0];
+        }
       }
       return res;
     },
@@ -275,7 +254,7 @@ export default {
         }
         let parsed = JSON.stringify(match);
         localStorage.setItem("listMatch", parsed);
-        this.$store.commit("setListMatch", match);
+        localStorage.setItem("listMatch", JSON.stringify(match));
         if (localStorage.getItem("listMatch")) {
           this.listMatch = JSON.parse(localStorage.getItem("listMatch"));
         }

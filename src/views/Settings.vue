@@ -64,15 +64,14 @@ export default {
           "--primary-color",
           "#2c3e50"
         );
-        this.$store.commit("setDarkMode", true);
+        localStorage.darkMode = true;
       } else {
         document.documentElement.style.setProperty(
           "--primary-color",
           "#ef476f"
         );
-        this.$store.commit("setDarkMode", false);
+        localStorage.darkMode = false;
       }
-      localStorage.darkMode = this.$store.getters.getDarkMode;
     });
   },
 };
