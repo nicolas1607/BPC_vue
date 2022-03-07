@@ -1,14 +1,12 @@
 <template>
   <div>
     <ModalInfo />
+    <ModalTeam />
 
-    <div
-      class="go animate__animated animate__bounceIn animate__delay-1s"
-      style="display: flex"
-    >
-      <router-link to="/game">
+    <div class="go animate__animated animate__bounceIn animate__delay-1s">
+      <a @click="openModalTeam()">
         <font-awesome-icon :icon="['fa', 'play']" class="font-awesome-icon" />
-      </router-link>
+      </a>
     </div>
     <a
       @click="addTeam()"
@@ -78,7 +76,7 @@
             </div>
             <select id="mode-select" class="form-select" name="mode">
               <option value="tournament">Tournoi</option>
-              <option value="elimination">Élimination</option>
+              <!-- <option value="elimination">Élimination</option> -->
             </select>
           </div>
         </div>
@@ -114,6 +112,7 @@ import NewTeam from "@/components/NewTeam.vue";
 import ParamTournament from "@/components/ParamTournament.vue";
 import Footer from "@/components/Footer.vue";
 import ModalInfo from "@/components/ModalInfo.vue";
+import ModalTeam from "@/components/ModalTeam.vue";
 
 export default {
   name: "Home",
@@ -123,6 +122,7 @@ export default {
     ParamTournament,
     Footer,
     ModalInfo,
+    ModalTeam,
   },
   data() {
     return {
@@ -154,6 +154,22 @@ export default {
       document.querySelector("#modal-info-text").innerHTML = text;
       document.querySelector("#modal-info").hidden = false;
     },
+    openModalTeam() {
+      // on réinitialise la liste
+      const listTeam = document.querySelectorAll(".alert-team");
+      listTeam.forEach((elem) => elem.remove());
+      // on recrée la liste
+      const div = document.querySelector(".alert-teams");
+      const teams = document.querySelectorAll(".team-name-input");
+      for (let i = 0; i < teams.length; i++) {
+        let p = document.createElement("p");
+        p.className = "alert-team";
+        if (teams[i].value != "") p.innerHTML = teams[i].value;
+        else p.innerHTML = "Équipe n°" + (i + 1);
+        div.appendChild(p);
+      }
+      document.querySelector("#modal-team").hidden = false;
+    },
     hiddenMenu() {
       const menu = document.querySelector("#menu");
       menu.className = "animate__animated animate__fadeOutLeft";
@@ -170,12 +186,11 @@ export default {
     displayParam: function () {
       const params = document.querySelector("#params");
       const go = document.querySelector(".go");
-      console.log(go);
       if (params.style.display == "" || params.style.display == "none") {
         params.style.display = "block";
         document
           .querySelector(".skewed-param")
-          .setAttribute("style", "height: 26em");
+          .setAttribute("style", "height: 25em");
         document
           .querySelector("#teams")
           .setAttribute("style", "margin-top: 3rem;");
@@ -217,13 +232,12 @@ export default {
           name,
           value,
         }));
-        console.log(res);
         localStorage.setItem("team", JSON.stringify(res));
         localStorage.setItem("resFinal", JSON.stringify(res));
       }
       if (localStorage.listMatch == "" || localStorage == "") {
         localStorage.setItem("listMatch", JSON.stringify(this.listGame()));
-        localStorage.setItem("totalMatch", JSON.stringify(this.listGame()));
+        localStorage.totalMatch = JSON.parse(localStorage.listMatch).length;
       }
       if (
         JSON.parse(localStorage.getItem("team")).size < 2 &&
@@ -247,6 +261,7 @@ export default {
             players.push(listPlayers[j].value + " ");
         }
         if (teamName != "") team.set(i, [teamName, players, 0]);
+        else team.set(i, ["Équipe n°" + i, players, 0]);
       }
       return team;
     },
@@ -285,7 +300,6 @@ export default {
   box-shadow: 2px 2px 10px 3px rgba(0, 0, 0, 0.2);
   width: 3rem;
   height: 3rem;
-  box-shadow: 3px 3px 6px 5px rgba(0, 0, 0, 0.2);
   background-color: var(--primary-color);
   z-index: 10;
 }

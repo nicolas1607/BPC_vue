@@ -79,14 +79,13 @@
       </div>
       <div class="div-button-modal">
         <button
-          v-if="this.$parent.nbTours < this.$parent.totalMatch - 1"
+          v-if="this.$parent.nbTours + 1 < this.$parent.totalMatch"
           class="team-button"
           @click="setScore()"
-          disabled
         >
           Valider
         </button>
-        <router-link v-else to="/score_table" class="team-button disabled"
+        <router-link v-else to="/score_table" class="team-button"
           >Valider</router-link
         >
       </div>
@@ -100,7 +99,7 @@ export default {
   data() {
     return {
       listMatch: {},
-      teams: {},
+      team: {},
       play1: "",
       play2: "",
     };
@@ -109,41 +108,52 @@ export default {
     this.play1 = localStorage.play1;
     this.play2 = localStorage.play2;
     // OBJECTS
-    if (localStorage.getItem("teams")) {
-      this.teams = JSON.parse(localStorage.getItem("teams"));
+    if (localStorage.getItem("team")) {
+      this.team = JSON.parse(localStorage.getItem("team"));
     }
     if (localStorage.getItem("listMatch")) {
       this.listMatch = JSON.parse(localStorage.getItem("listMatch"));
     }
   },
+  beforeUnmount() {
+    if (this.$parent.nbTours + 1 == this.$parent.totalMatch) {
+      this.setScore();
+    }
+  },
   methods: {
     addPts(id) {
+      let max;
+      if (localStorage.nbCups == "") max = 15;
+      else max = localStorage.nbCups;
       const valeur = document.querySelector("#team-score-valeur" + id);
-      if (valeur.value && valeur.value < 9)
+      if (valeur.value && valeur.value < max)
         valeur.value = parseInt(valeur.value) + 1;
       else valeur.value = 1;
       if (valeur.value == 0) valeur.value = null;
-      this.verifVictory();
+      // this.verifVictory();
     },
     lessPts(id) {
+      let max;
+      if (localStorage.nbCups == "") max = 15;
+      else max = localStorage.nbCups;
       const valeur = document.querySelector("#team-score-valeur" + id);
       if (valeur.value && valeur.value > 0)
         valeur.value = parseInt(valeur.value) - 1;
-      if (valeur.value == 0) valeur.value = null;
-      this.verifVictory();
+      if (valeur.value == 0) valeur.value = max;
+      // this.verifVictory();
     },
-    verifVictory() {
-      const score1 = document.querySelector("#team-score-valeur1");
-      const score2 = document.querySelector("#team-score-valeur2");
-      const button = document.querySelector(".team-button");
-      if (
-        (score1.value > 0 && score2.value == 0) ||
-        (score1.value == 0 && score2.value > 0)
-      ) {
-        button.className = "team-button";
-        button.disabled = false;
-      } else button.disabled = true;
-    },
+    // verifVictory() {
+    //   const score1 = document.querySelector("#team-score-valeur1");
+    //   const score2 = document.querySelector("#team-score-valeur2");
+    //   const button = document.querySelector(".team-button");
+    //   if (
+    //     (score1.value > 0 && score2.value == 0) ||
+    //     (score1.value == 0 && score2.value > 0)
+    //   ) {
+    //     button.className = "team-button";
+    //     button.disabled = false;
+    //   } else button.disabled = true;
+    // },
     setScore() {
       const team1 = document.querySelector("#team-name1").innerHTML;
       let score1 = document.querySelector("#team-score-valeur1").value;
@@ -151,10 +161,13 @@ export default {
       const team2 = document.querySelector("#team-name2").innerHTML;
       let score2 = document.querySelector("#team-score-valeur2").value;
       document.querySelector("#team-score-valeur2").value = "0";
+
       // Augmente le nbTours
-      this.$parent.nbTours++;
-      localStorage.nbTours++;
-      localStorage.nbTours = this.$parent.nbTours;
+      if (this.$parent.nbTours < this.$parent.totalMatch - 1) {
+        this.$parent.nbTours++;
+        localStorage.nbTours++;
+      }
+
       // Supprimer le match de listMatch
       const matchs = [];
       for (let match of this.$parent.listMatch) {
@@ -172,11 +185,12 @@ export default {
       if (localStorage.getItem("listMatch")) {
         this.$parent.listMatch = JSON.parse(localStorage.getItem("listMatch"));
       }
+
       // Maj du tableau des scores
       if (score1 == null || score1 == "") score1 = 0;
       if (score2 == null || score2 == "") score2 = 0;
       const result = [];
-      for (let team of this.$parent.teams) {
+      for (let team of this.$parent.team) {
         if (team["value"][0] == team1) {
           result.push({
             name: team["name"],
@@ -203,9 +217,9 @@ export default {
         }
       }
 
-      localStorage.setItem("teams", JSON.stringify(result));
-      if (localStorage.getItem("teams")) {
-        this.$parent.teams = JSON.parse(localStorage.getItem("teams"));
+      localStorage.setItem("team", JSON.stringify(result));
+      if (localStorage.getItem("team")) {
+        this.$parent.team = JSON.parse(localStorage.getItem("team"));
       }
       this.$parent.closeScoreModal();
     },
@@ -237,19 +251,17 @@ export default {
   background-color: var(--primary-color);
   position: absolute;
   left: 8%;
+  top: auto;
+  bottom: auto;
   width: 84%;
   border-radius: 0.2rem;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  padding: 2rem;
 }
 
 .modal-edit {
   top: 10%;
   bottom: 10%;
-}
-
-.modal-score {
-  top: 25%;
-  bottom: 25%;
 }
 
 #close-modal {
@@ -271,7 +283,6 @@ export default {
 #div-img-modal {
   display: flex;
   justify-content: space-around;
-  margin-top: 2rem;
 }
 
 #title-score {
@@ -297,7 +308,7 @@ export default {
 }
 
 .div-team {
-  margin: 2rem auto;
+  margin-bottom: 2rem;
   display: flex;
   flex-direction: column;
   gap: 2rem;
@@ -335,8 +346,8 @@ export default {
 }
 
 .team-score-valeur {
-  text-align: center;
-  width: 2.2rem;
+  text-align: right;
+  width: 3rem;
   height: 2rem;
   background-color: var(--primary-color);
   border: none;

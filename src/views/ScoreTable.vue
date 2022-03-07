@@ -40,7 +40,7 @@
                 <th id="score-sortable">Score</th>
               </tr>
             </thead>
-            <tbody v-for="team in teams" :key="team">
+            <tbody v-for="team in team" :key="team">
               <tr id="1" class="tr-elem">
                 <td>{{ team.name }}</td>
                 <td>{{ team.value[0] }}</td>
@@ -78,12 +78,12 @@ export default {
   },
   data() {
     return {
-      teams: {},
+      team: {},
     };
   },
   mounted() {
-    if (localStorage.getItem("teams")) {
-      this.teams = JSON.parse(localStorage.getItem("teams"));
+    if (localStorage.getItem("team")) {
+      this.team = JSON.parse(localStorage.getItem("team"));
     }
 
     // JS_SORTABLE
@@ -98,7 +98,7 @@ export default {
   },
   methods: {
     sortedData() {
-      this.teams.sort(function (a, b) {
+      this.team.sort(function (a, b) {
         return a["value"][2] > b["value"][2] ? -1 : 1;
       });
     },

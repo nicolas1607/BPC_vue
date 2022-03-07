@@ -41,7 +41,11 @@
             "
           />
         </label>
-        <input class="form-check-input" type="checkbox" name="return" />
+        <input
+          class="form-check-input check-random"
+          type="checkbox"
+          name="return"
+        />
       </div>
       <div class="form-check form-switch checkbox check-elim-series">
         <label for="return"
@@ -58,7 +62,11 @@
             "
           />
         </label>
-        <input class="form-check-input" type="checkbox" name="return" checked />
+        <input
+          class="form-check-input check-elimination"
+          type="checkbox"
+          name="return"
+        />
       </div>
       <!-- <div class="checkbox">
         <input type="checkbox" name="return" />
@@ -93,9 +101,7 @@
           />
         </label>
         <select id="win" class="nb-pts" name="win">
-          <div>
-            <option value="difference" selected>D</option>
-          </div>
+          <option value="D" selected>D</option>
           <option value="1">1</option>
           <option value="3">3</option>
           <option value="5">5</option>
@@ -126,7 +132,7 @@
             "
           />
         </label>
-        <select id="table" class="nb-pts" name="table">
+        <select id="nbTables" class="nb-pts" name="table">
           <option value="1" selected>1</option>
           <option value="3">2</option>
           <option value="5">3</option>
@@ -134,7 +140,7 @@
           <option value="5">5</option>
         </select>
       </div>
-      <div class="nb-pts-select">
+      <!-- <div class="nb-pts-select">
         <label for="table"
           >Nombre d'équipes
           <font-awesome-icon
@@ -149,14 +155,14 @@
             "
           />
         </label>
-        <select id="table" class="nb-pts" name="table">
+        <select id="nbTeams" class="nb-pts" name="table" disabled>
           <option value="" selected></option>
           <option value="4">4</option>
           <option value="8">8</option>
           <option value="16">16</option>
           <option value="32">32</option>
         </select>
-      </div>
+      </div> -->
       <div class="nb-pts-select">
         <label for="table"
           >Nombre de verres par équipe
@@ -172,10 +178,10 @@
             "
           />
         </label>
-        <select id="table" class="nb-pts" name="table">
-          <option value=""></option>
+        <select id="nbCups" class="nb-pts" name="table">
+          <option value="" selected></option>
           <option value="3">3</option>
-          <option value="6" selected>6</option>
+          <option value="6">6</option>
           <option value="10">10</option>
           <option value="15">15</option>
         </select>
@@ -187,33 +193,32 @@
 <script>
 export default {
   name: "ParamTournament",
-  mounted() {
-    // WINNER
-    const win = document.querySelector("#win");
-    win.addEventListener("change", () => {
-      localStorage.win = win.value;
-    });
-    // LOOSE
-    const loose = document.querySelector("#loose");
-    loose.addEventListener("change", () => {
-      localStorage.loose = loose.value;
-    });
+  beforeUnmount() {
+    localStorage.win = document.querySelector("#win").value;
+    localStorage.loose = document.querySelector("#loose").value;
+    localStorage.nbTables = document.querySelector("#nbTables").value;
+    localStorage.nbCups = document.querySelector("#nbCups").value;
   },
   methods: {
     teamVteam() {
       const team = document.querySelector("#teamVteam");
       const player = document.querySelector("#playerVplayer");
+      const random = document.querySelector(".check-random");
       if (team.checked) {
         if (player.checked) {
           player.checked = false;
+          random.disabled = false;
         } else {
           player.checked = true;
+          random.disabled = true;
         }
       } else {
         if (player.checked) {
           player.checked = false;
+          random.disabled = false;
         } else {
           player.checked = true;
+          random.disabled = true;
         }
       }
     },
@@ -221,17 +226,22 @@ export default {
       // Gestion checkboxes
       const team = document.querySelector("#teamVteam");
       const player = document.querySelector("#playerVplayer");
+      const random = document.querySelector(".check-random");
       if (player.checked) {
         if (team.checked) {
           team.checked = false;
+          random.disabled = true;
         } else {
           team.checked = true;
+          random.disabled = false;
         }
       } else {
         if (team.checked) {
           team.checked = false;
+          random.disabled = true;
         } else {
           team.checked = true;
+          random.disabled = false;
         }
       }
     },

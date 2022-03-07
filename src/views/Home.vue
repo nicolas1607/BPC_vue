@@ -47,22 +47,12 @@ export default {
     localStorage.listMatch = "";
 
     // SETTINGS //
-    localStorage.win = "D";
-    localStorage.equal = "1";
-    localStorage.loose = "0";
     localStorage.randomTeam = "false";
-  },
-  beforeUnmount() {
-    this.newGame();
-    setTimeout(() => {}, 5000);
-  },
-  methods: {
-    newGame() {
-      const img = document.querySelector(".content a");
-      img.className = "home animate__animated animate__rotateOut";
-      img.style.display = "none";
-      img.style.display = "block";
-    },
+    localStorage.elimination = "false";
+    localStorage.win = "D";
+    localStorage.loose = "0";
+    localStorage.nbTables = "1";
+    localStorage.nbCups = "6";
   },
 };
 </script>

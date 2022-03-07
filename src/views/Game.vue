@@ -68,9 +68,9 @@
                 <th id="score-sortable">Score</th>
               </tr>
             </thead>
-            <tbody v-for="team in teams" :key="team">
+            <tbody v-for="team in team" :key="team">
               <tr id="1" class="tr-elem">
-                <td>{{ team.name }}</td>
+                <td class="team-num">{{ team.name }}</td>
                 <td>{{ team.value[0] }}</td>
                 <td class="table-players" v-if="team.value[1].length != 0">
                   <span v-for="(player, index) in team.value[1]" :key="player">
@@ -88,49 +88,74 @@
           </table>
         </div>
 
-        <div id="div-versus">
-          <div id="div-versus-btn">
-            <a @click="showEditModal()">
-              <img
-                id="edit-match"
-                class="animate__animated animate__zoomIn animate__delay-2s"
-                :src="require(`../assets/editer.png`)"
-              />
-            </a>
-            <a @click="randomMatch()">
-              <font-awesome-icon
-                :icon="['fa', 'random']"
-                id="switch-match"
-                class="
-                  font-awesome-icon
-                  animate__animated animate__zoomIn animate__delay-2s
-                "
-              />
-            </a>
-            <a>
-              <font-awesome-icon
-                :icon="['fa', 'dice']"
-                id="game-match"
-                class="
-                  font-awesome-icon
-                  animate__animated animate__zoomIn animate__delay-2s
-                "
-              />
-            </a>
-          </div>
+        <a
+          class="
+            edit-match
+            animate__animated animate__bounceIn animate__delay-2s
+          "
+          @click="showEditModal()"
+        >
+          <img id="edit-match" :src="require(`../assets/editer.png`)" />
+        </a>
+        <a
+          class="
+            switch-match
+            animate__animated animate__bounceIn animate__delay-1s
+          "
+          @click="randomMatch()"
+        >
+          <font-awesome-icon
+            :icon="['fa', 'random']"
+            id="switch-match"
+            class="font-awesome-icon"
+          />
+        </a>
+        <a class="game-match animate__animated animate__bounceIn">
+          <font-awesome-icon
+            :icon="['fa', 'dice']"
+            id="game-match"
+            class="font-awesome-icon"
+          />
+        </a>
+        <a class="toggle-match">
+          <font-awesome-icon
+            :icon="['fa', 'ellipsis-h']"
+            class="btn-toggle font-awesome-icon"
+            @click="displayBtn()"
+          />
+        </a>
 
+        <div id="div-versus">
           <div id="div-players">
-            <p id="player1" class="animate__animated animate__bounceIn">
-              {{ play1 }}
-            </p>
+            <div>
+              <input
+                class="team-score-valeur"
+                type="number"
+                aria-label="Score du joueur n°1"
+                pattern="[0-9]"
+                placeholder="0"
+              />
+              <p id="player1" class="animate__animated animate__bounceIn">
+                {{ play1 }}
+              </p>
+            </div>
             <img
               id="team-versus"
               class="animate__animated animate__jackInTheBox animate__delay-1s"
               :src="require(`../assets/vs.svg`)"
             />
-            <p id="player2" class="animate__animated animate__bounceIn">
-              {{ play2 }}
-            </p>
+            <div>
+              <input
+                class="team-score-valeur"
+                type="number"
+                aria-label="Score du joueur n°1"
+                pattern="[0-9]"
+                placeholder="0"
+              />
+              <p id="player2" class="animate__animated animate__bounceIn">
+                {{ play2 }}
+              </p>
+            </div>
           </div>
           <button class="button-img" @click="showScoreModal()">
             Jouer le match
@@ -163,7 +188,7 @@ export default {
       play1: "",
       play2: "",
       // OBJECTS PROXY //
-      teams: {},
+      team: {},
       listMatch: {},
     };
   },
@@ -180,14 +205,12 @@ export default {
   },
   mounted() {
     // INTEGER //
-    if (localStorage.nbTours) this.nbTours = localStorage.nbTours;
-    if (localStorage.totalMatch) this.totalMatch = localStorage.totalMatch;
+    this.nbTours = localStorage.nbTours;
+    this.totalMatch = localStorage.totalMatch;
 
     // OBJECTS
-    if (localStorage.getItem("teams"))
-      this.teams = JSON.parse(localStorage.getItem("team"));
-    if (localStorage.getItem("listMatch"))
-      this.listMatch = JSON.parse(localStorage.getItem("listMatch"));
+    this.team = JSON.parse(localStorage.getItem("team"));
+    this.listMatch = JSON.parse(localStorage.getItem("listMatch"));
 
     // JS_SORTABLE
     let sortableScript = document.createElement("link");
@@ -197,7 +220,7 @@ export default {
   updated() {
     // Increment nbTours / totalMatch
     if (this.listMatch[0]) {
-      for (let team of this.teams) {
+      for (let team of this.team) {
         if (team["name"] == this.listMatch[0][0]) {
           this.play1 = team["value"][0];
           localStorage.play1 = team["value"][0];
@@ -219,12 +242,36 @@ export default {
     },
     getTeamName(id) {
       let res;
-      for (let team of this.teams) {
+      for (let team of this.team) {
         if (team["name"] == id) {
           res = team["value"][0];
         }
       }
       return res;
+    },
+    displayBtn() {
+      const toggle = document.querySelector(".btn-toggle");
+      const editMatch = document.querySelector(".edit-match");
+      const switchMatch = document.querySelector(".switch-match");
+      const gameMatch = document.querySelector(".game-match");
+      if (editMatch.className.includes("bounceIn")) {
+        editMatch.className = "edit-match animate__animated animate__bounceOut";
+        switchMatch.className =
+          "switch-match animate__animated animate__bounceOut animate__delay-1s";
+        gameMatch.className =
+          "game-match animate__animated animate__bounceOut animate__delay-2s";
+        toggle.setAttribute("style", "transform: rotate(-270deg)");
+      } else {
+        editMatch.className =
+          "edit-match animate__animated animate__bounceIn animate__delay-2s";
+        switchMatch.className =
+          "switch-match animate__animated animate__bounceIn animate__delay-1s";
+        gameMatch.className = "game-match animate__animated animate__bounceIn";
+        toggle.setAttribute("style", "transform: rotate(0)");
+        editMatch.style.display = "flex";
+        switchMatch.style.display = "flex";
+        gameMatch.style.display = "flex";
+      }
     },
     randomMatch(p1, p2) {
       if (this.listMatch[1]) {
@@ -261,13 +308,17 @@ export default {
       }
     },
     sortedData() {
-      this.teams.sort(function (a, b) {
+      this.team.sort(function (a, b) {
         return a["value"][2] > b["value"][2] ? -1 : 1;
       });
+      const teamNum = document.querySelectorAll(".team-num");
+      for (let i = 0; i < teamNum.length; i++) {
+        teamNum[i].innerHTML = i + 1;
+      }
     },
-    changeMatch(teams) {
-      const p1 = teams.split("-")[0];
-      const p2 = teams.split("-")[1];
+    changeMatch(team) {
+      const p1 = team.split("-")[0];
+      const p2 = team.split("-")[1];
       this.randomMatch(p1, p2);
       this.closeEditModal();
     },
@@ -302,6 +353,11 @@ export default {
   margin-bottom: 4rem;
 }
 
+#div-players {
+  display: grid;
+  grid-template-columns: 3fr 1.5fr 3fr;
+}
+
 #div-versus-btn {
   display: grid;
   grid-template-columns: 1fr;
@@ -311,6 +367,109 @@ export default {
   top: 0;
   right: 0;
   z-index: 2;
+}
+
+#team-versus {
+  margin: auto;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  width: 80%;
+}
+
+.div-table {
+  display: flex;
+  flex-direction: column;
+}
+
+#player1,
+#player2 {
+  word-break: break-word;
+  font-size: 1rem;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+#player1 {
+  --animate-duration: 2s;
+}
+#player2 {
+  --animate-duration: 3s;
+}
+
+.button-img {
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  width: 80%;
+  margin: auto;
+  margin-top: 3rem;
+  animation: unset;
+}
+
+.team-score-valeur {
+  background-color: transparent;
+  text-align: center;
+  width: 3rem;
+  height: 2rem;
+  border: none;
+  color: white;
+  font-size: 2rem;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+}
+
+.team-score-valeur::placeholder {
+  color: white;
+}
+
+/* TOGGLE BTN */
+
+.edit-match,
+.switch-match,
+.game-match {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  right: 1.5rem;
+  border-radius: 10rem;
+  box-shadow: 2px 2px 10px 3px rgba(0, 0, 0, 0.2);
+  width: 3rem;
+  height: 3rem;
+  background-color: var(--primary-color);
+  z-index: 10;
+}
+
+.edit-match {
+  bottom: 18rem;
+}
+
+.switch-match {
+  bottom: 14rem;
+}
+
+.game-match {
+  bottom: 10rem;
+}
+
+.btn-toggle {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  bottom: 6rem;
+  color: white;
+  right: 1.5rem;
+  font-size: 1.2rem;
+  box-shadow: 2px 2px 10px 3px rgba(0, 0, 0, 0.2);
+  background-color: var(--primary-color);
+  border-radius: 10rem;
+  height: 3rem;
+  width: 3rem;
+  padding: 0.8rem;
+  z-index: 10;
+  transform: scale(1.1);
+  transform: rotate(0);
+  transition: transform 2s;
 }
 
 #edit-match,
@@ -329,45 +488,5 @@ export default {
 
 #game-match {
   --animate-duration: 2s;
-}
-
-#team-versus {
-  margin: auto;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  width: 30%;
-}
-
-.div-table {
-  display: flex;
-  flex-direction: column;
-}
-
-#player1,
-#player2 {
-  word-break: break-word;
-  font-size: 1.6rem;
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-#player1 {
-  margin-left: -4rem;
-  --animate-duration: 2s;
-}
-#player2 {
-  position: relative;
-  margin-left: 4rem;
-  right: 0;
-  --animate-duration: 3s;
-}
-
-.button-img {
-  padding: 0.8rem 1rem;
-  font-size: 1rem;
-  width: 80%;
-  margin: auto;
-  margin-top: 2rem;
-  animation: unset;
 }
 </style>

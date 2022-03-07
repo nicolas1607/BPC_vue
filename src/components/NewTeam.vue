@@ -7,15 +7,11 @@
       <div class="team-label team-name">
         <input
           :id="'team-input' + id"
-          class="team-input"
-          :aria-label="'Équipe n°' + id"
+          class="team-input team-name-input"
+          :aria-label="'Nom d\'équipe n°' + id"
           name="team-name"
-          :placeholder="'Équipe n°' + id"
-          maxlength="24"
-        />
-        <font-awesome-icon
-          :icon="['fa', 'pen']"
-          class="font-awesome-icon team-name-edit"
+          :placeholder="'Nom d\'équipe n°' + id"
+          maxlength="15"
         />
       </div>
       <section class="curved"></section>
@@ -70,8 +66,9 @@ export default {
         teams[i].id = "team" + (i + 1);
         teams[i].querySelector(".team-input").id = "team-input" + (i + 1);
         teams[i].querySelector(".team-input").placeholder =
-          "Équipe n°" + (i + 1);
-        teams[i].querySelector(".team-input").ariaLabel = "Équipe n°" + (i + 1);
+          "Nom d'équipe n°" + (i + 1);
+        teams[i].querySelector(".team-input").ariaLabel =
+          "Nom d'équipe n°" + (i + 1);
         teams[i].querySelector(".team-button").id = "button" + (i + 1);
         teams[i].querySelector(".remove-team").id = "remove-team" + (i + 1);
         teams[i].querySelectorAll(".team-label")[1].id = "players" + (i + 1);
