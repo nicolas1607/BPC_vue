@@ -56,7 +56,7 @@ export default {
   right: 0;
   width: 100vw;
   max-width: 100%;
-  height: 3em;
+  height: 2.8em;
   background-color: var(--primary-color);
   z-index: 100;
   transform: skewY(-1deg);
@@ -69,7 +69,8 @@ export default {
   justify-content: space-between;
   align-items: center;
   color: white;
-  padding: 2rem 1.5rem 0 1.5rem;
+  padding: 1.5rem;
+  padding-bottom: 0;
   z-index: 1000;
   transform: skewY(1deg);
 }

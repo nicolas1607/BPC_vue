@@ -86,7 +86,8 @@ li {
   list-style-type: none;
 }
 
-button {
+button,
+.team-button {
   font-size: 1rem;
   border-radius: 0.2rem;
   color: #bbb4b5;
@@ -98,7 +99,8 @@ button {
   font-weight: bold;
 }
 
-button:hover {
+button:hover,
+.team-button:hover {
   cursor: pointer;
   animation: jelly 0.5s;
   box-shadow: 3px 3px 3px 2px rgba(0, 0, 0, 0.2);
@@ -156,8 +158,8 @@ select {
 
 /* Container */
 .container {
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
 @media screen and (min-width: 36em) {
@@ -298,7 +300,7 @@ table {
 
 table tr {
   display: grid;
-  grid-template-columns: 2rem 3fr 3fr 4rem;
+  grid-template-columns: 2rem 3fr 3fr 2rem 2rem 2rem;
 }
 
 td,
@@ -340,11 +342,6 @@ th,
 thead,
 tr {
   border-style: none;
-}
-
-#table-team {
-  display: flex;
-  flex-direction: column-reverse;
 }
 
 .table {

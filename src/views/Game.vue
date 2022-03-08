@@ -33,11 +33,10 @@
 
     <div id="modal-edit" class="overlap" hidden>
       <div id="modal" class="modal-edit">
-        <a id="close-modal" @click="closeEditModal()">X</a>
-        <h2 id="match-edit-title">
-          Séléctionner <br />
-          votre match
-        </h2>
+        <a id="close-modal" @click="closeEditModal()"
+          ><font-awesome-icon :icon="['fa', 'times']" class="font-awesome-icon"
+        /></a>
+        <h2 id="match-edit-title">Séléctionner votre match</h2>
         <div id="match-edit">
           <div v-for="match in this.listMatch" :key="match">
             <a
@@ -58,6 +57,85 @@
 
     <div class="container">
       <div id="table-team">
+        <!-- Match en cours -->
+        <div id="div-versus">
+          <img
+            id="team-versus"
+            class="animate__animated animate__jackInTheBox animate__delay-1s"
+            :src="require(`../assets/vs.svg`)"
+          />
+          <div id="div-players">
+            <!-- Team n°1 -->
+            <div>
+              <div class="score-input">
+                <img
+                  class="change-score"
+                  :src="require(`../assets/less_pts.svg`)"
+                  @click="this.lessPts(1)"
+                />
+                <input
+                  id="team-score-valeur1"
+                  class="team-score-valeur"
+                  type="number"
+                  aria-label="Score du joueur n°1"
+                  pattern="[0-9]"
+                  placeholder="0"
+                />
+                <img
+                  class="change-score"
+                  :src="require(`../assets/add_pts.svg`)"
+                  @click="this.addPts(1)"
+                />
+              </div>
+              <p id="player1" class="animate__animated animate__bounceIn">
+                {{ play1 }}
+              </p>
+            </div>
+            <!-- Team n°2 -->
+            <div>
+              <div class="score-input">
+                <img
+                  class="change-score"
+                  :src="require(`../assets/less_pts.svg`)"
+                  @click="this.lessPts(2)"
+                />
+                <input
+                  id="team-score-valeur2"
+                  class="team-score-valeur"
+                  type="number"
+                  aria-label="Score du joueur n°1"
+                  pattern="[0-9]"
+                  placeholder="0"
+                />
+                <img
+                  class="change-score"
+                  :src="require(`../assets/add_pts.svg`)"
+                  @click="this.addPts(2)"
+                />
+              </div>
+              <p id="player2" class="animate__animated animate__bounceIn">
+                {{ play2 }}
+              </p>
+            </div>
+          </div>
+          <button class="button-img" @click="showScoreModal()">
+            Jouer le match
+          </button>
+        </div>
+
+        <!-- Nav tabs -->
+        <ul class="tabs">
+          <li class="tabs-item tabs-active">
+            <a class="tabs-link" aria-current="page" href="#"
+              >Tableau des scores</a
+            >
+          </li>
+          <li class="tabs-item">
+            <a class="tabs-link" href="#">Liste des matchs</a>
+          </li>
+        </ul>
+
+        <!-- Tableau des scores -->
         <div class="div-table">
           <table class="table table-striped table-hover sortable">
             <thead>
@@ -65,7 +143,9 @@
                 <th>#</th>
                 <th>Équipe</th>
                 <th>Joueurs</th>
-                <th id="score-sortable">Score</th>
+                <th>V</th>
+                <th>D</th>
+                <th id="score-sortable">P</th>
               </tr>
             </thead>
             <tbody v-for="team in team" :key="team">
@@ -79,87 +159,50 @@
                   </span>
                 </td>
                 <td v-else>/</td>
-                <td v-if="team.value[2]" id="score-sortable">
-                  {{ team.value[2] }}
+                <td v-if="team.value[3]" id="score-sortable">
+                  {{ team.value[3] }}
                 </td>
                 <td v-else id="score-sortable">0</td>
+                <td v-if="team.value[4]">{{ team.value[4] }}</td>
+                <td v-else>0</td>
+                <td v-if="team.value[2]">
+                  {{ team.value[2] }}
+                </td>
+                <td v-else>0</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <a
-          class="
-            edit-match
-            animate__animated animate__bounceIn animate__delay-2s
-          "
-          @click="showEditModal()"
-        >
-          <img id="edit-match" :src="require(`../assets/editer.png`)" />
-        </a>
-        <a
-          class="
-            switch-match
-            animate__animated animate__bounceIn animate__delay-1s
-          "
-          @click="randomMatch()"
-        >
-          <font-awesome-icon
-            :icon="['fa', 'random']"
-            id="switch-match"
-            class="font-awesome-icon"
-          />
-        </a>
-        <a class="game-match animate__animated animate__bounceIn">
-          <font-awesome-icon
-            :icon="['fa', 'dice']"
-            id="game-match"
-            class="font-awesome-icon"
-          />
-        </a>
-        <a class="toggle-match">
-          <font-awesome-icon
-            :icon="['fa', 'ellipsis-h']"
-            class="btn-toggle font-awesome-icon"
-            @click="displayBtn()"
-          />
-        </a>
-
-        <div id="div-versus">
-          <div id="div-players">
-            <div>
-              <input
-                class="team-score-valeur"
-                type="number"
-                aria-label="Score du joueur n°1"
-                pattern="[0-9]"
-                placeholder="0"
-              />
-              <p id="player1" class="animate__animated animate__bounceIn">
-                {{ play1 }}
-              </p>
-            </div>
-            <img
-              id="team-versus"
-              class="animate__animated animate__jackInTheBox animate__delay-1s"
-              :src="require(`../assets/vs.svg`)"
+        <!-- Toggle boutons -->
+        <div>
+          <a class="edit-match" @click="showEditModal()">
+            <font-awesome-icon
+              :icon="['fa', 'pen']"
+              id="edit-match"
+              class="font-awesome-icon"
             />
-            <div>
-              <input
-                class="team-score-valeur"
-                type="number"
-                aria-label="Score du joueur n°1"
-                pattern="[0-9]"
-                placeholder="0"
-              />
-              <p id="player2" class="animate__animated animate__bounceIn">
-                {{ play2 }}
-              </p>
-            </div>
-          </div>
-          <button class="button-img" @click="showScoreModal()">
-            Jouer le match
-          </button>
+          </a>
+          <a class="switch-match animate__animated" @click="randomMatch()">
+            <font-awesome-icon
+              :icon="['fa', 'random']"
+              id="switch-match"
+              class="font-awesome-icon"
+            />
+          </a>
+          <a class="game-match">
+            <font-awesome-icon
+              :icon="['fa', 'dice']"
+              id="game-match"
+              class="font-awesome-icon"
+            />
+          </a>
+          <a class="toggle-match" @click="displayBtn()">
+            <font-awesome-icon
+              :icon="['fa', 'ellipsis-h']"
+              class="btn-toggle font-awesome-icon"
+            />
+          </a>
         </div>
       </div>
     </div>
@@ -233,7 +276,36 @@ export default {
     }
     this.sortedData();
   },
+  beforeUnmount() {
+    if (this.nbTours + 1 == this.totalMatch) {
+      this.setScore();
+    }
+  },
   methods: {
+    addPts(id) {
+      let max;
+      if (localStorage.nbCups == "") max = 15;
+      else max = localStorage.nbCups;
+      const valeur = document.querySelector("#team-score-valeur" + id);
+      if (valeur.value && valeur.value < max) {
+        valeur.value = parseInt(valeur.value) + 1;
+      } else {
+        valeur.value = 1;
+      }
+      if (valeur.value == 0) valeur.value = null;
+    },
+    lessPts(id) {
+      let max;
+      if (localStorage.nbCups == "") max = 15;
+      else max = localStorage.nbCups;
+      const valeur = document.querySelector("#team-score-valeur" + id);
+      if (valeur.value && valeur.value > 0) {
+        valeur.value = parseInt(valeur.value) - 1;
+      }
+      if (valeur.value == 0) {
+        valeur.value = max;
+      }
+    },
     hiddenMenu() {
       const menu = document.querySelector("#menu");
       menu.className = "animate__animated animate__fadeOutLeft";
@@ -309,7 +381,17 @@ export default {
     },
     sortedData() {
       this.team.sort(function (a, b) {
-        return a["value"][2] > b["value"][2] ? -1 : 1;
+        if (a["value"][3] > b["value"][3]) {
+          return -1;
+        } else if (a["value"][3] < b["value"][3]) {
+          return 1;
+        } else {
+          if (a["value"][2] < b["value"][2]) {
+            return 1;
+          } else {
+            return -1;
+          }
+        }
       });
       const teamNum = document.querySelectorAll(".team-num");
       for (let i = 0; i < teamNum.length; i++) {
@@ -334,11 +416,106 @@ export default {
     // SCORE MODAL
     showScoreModal() {
       const modal = document.querySelector("#modal-score");
+      const score1 = document.querySelector("#team-score-valeur1").value;
+      const score2 = document.querySelector("#team-score-valeur2").value;
+      if (score1 == "") document.querySelector(".score1").innerHTML = 0;
+      else document.querySelector(".score1").innerHTML = score1;
+      if (score2 == "") document.querySelector(".score2").innerHTML = 0;
+      else document.querySelector(".score2").innerHTML = score2;
       modal.hidden = false;
     },
     closeScoreModal() {
       const modal = document.querySelector("#modal-score");
       modal.hidden = true;
+    },
+    // SET SCORE
+    setScore() {
+      const team1 = document.querySelector("#team-name1").innerHTML;
+      let score1 = document.querySelector("#team-score-valeur1").value;
+      document.querySelector("#team-score-valeur1").value = "0";
+      document.querySelector(".score1").innerHTML = "0";
+      const team2 = document.querySelector("#team-name2").innerHTML;
+      let score2 = document.querySelector("#team-score-valeur2").value;
+      document.querySelector("#team-score-valeur2").value = "0";
+      document.querySelector(".score2").innerHTML = "0";
+
+      // Augmente le nbTours
+      if (this.nbTours < this.totalMatch - 1) {
+        this.nbTours++;
+        localStorage.nbTours++;
+      }
+
+      // Supprimer le match de listMatch
+      const matchs = [];
+      for (let match of this.listMatch) {
+        if (
+          this.getTeamName(match[0]) == team1 &&
+          this.getTeamName(match[1]) == team2
+        ) {
+          // empty
+        } else {
+          matchs.push([match[0], match[1]]);
+        }
+      }
+      localStorage.setItem("listMatch", JSON.stringify(matchs));
+      localStorage.setItem("listMatch", JSON.stringify(matchs));
+      if (localStorage.getItem("listMatch")) {
+        this.listMatch = JSON.parse(localStorage.getItem("listMatch"));
+      }
+
+      // Maj du tableau des scores
+      // if (score1 == null || score1 == "") score1 = 0;
+      // if (score2 == null || score2 == "") score2 = 0;
+      const result = [];
+      for (let team of this.team) {
+        if (team["value"][0] == team1) {
+          result.push({
+            name: team["name"],
+            value: [
+              team["value"][0],
+              team["value"][1],
+              parseInt(team["value"][2]) + parseInt(score1),
+              parseInt(score1) > parseInt(score2)
+                ? team["value"][3] + 1
+                : team["value"][3],
+              parseInt(score1) < parseInt(score2)
+                ? team["value"][4] + 1
+                : team["value"][4],
+            ],
+          });
+        } else if (team["value"][0] == team2) {
+          result.push({
+            name: team["name"],
+            value: [
+              team["value"][0],
+              team["value"][1],
+              parseInt(team["value"][2]) + parseInt(score2),
+              parseInt(score1) < parseInt(score2)
+                ? team["value"][3] + 1
+                : team["value"][3],
+              parseInt(score1) > parseInt(score2)
+                ? team["value"][4] + 1
+                : team["value"][4],
+            ],
+          });
+        } else {
+          result.push({
+            name: team["name"],
+            value: [
+              team["value"][0],
+              team["value"][1],
+              team["value"][2],
+              team["value"][3],
+              team["value"][4],
+            ],
+          });
+        }
+      }
+      localStorage.setItem("team", JSON.stringify(result));
+      if (localStorage.getItem("team")) {
+        this.team = JSON.parse(localStorage.getItem("team"));
+      }
+      this.closeScoreModal();
     },
   },
 };
@@ -349,13 +526,18 @@ export default {
   position: relative;
   text-align: center;
   color: white;
-  margin-top: 6rem;
+  margin-top: 7rem;
   margin-bottom: 4rem;
+  background-color: rgba(239, 71, 111, 0.1);
+  border: solid 3px white;
+  padding: 2rem 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 2px 2px 10px 3px rgba(0, 0, 0, 0.2);
 }
 
 #div-players {
   display: grid;
-  grid-template-columns: 3fr 1.5fr 3fr;
+  grid-template-columns: 1fr 1fr;
 }
 
 #div-versus-btn {
@@ -370,21 +552,19 @@ export default {
 }
 
 #team-versus {
+  position: absolute;
   margin: auto;
   margin-top: 1rem;
   margin-bottom: 1rem;
-  width: 80%;
-}
-
-.div-table {
-  display: flex;
-  flex-direction: column;
+  width: 20%;
+  top: -2rem;
+  right: -1rem;
 }
 
 #player1,
 #player2 {
   word-break: break-word;
-  font-size: 1rem;
+  font-size: 1.2rem;
   margin-top: 0;
   margin-bottom: 0;
 }
@@ -401,24 +581,59 @@ export default {
   font-size: 1rem;
   width: 80%;
   margin: auto;
-  margin-top: 3rem;
+  margin-top: 2rem;
   animation: unset;
 }
 
 .team-score-valeur {
   background-color: transparent;
   text-align: center;
-  width: 3rem;
-  height: 2rem;
+  width: 3.6rem;
+  height: 3rem;
   border: none;
   color: white;
-  font-size: 2rem;
-  margin-top: 3rem;
-  margin-bottom: 1rem;
+  font-size: 2.4rem;
+  margin-top: 0.8rem;
+  margin-bottom: 1.2rem;
+  padding: 0;
 }
 
 .team-score-valeur::placeholder {
   color: white;
+}
+
+.score-input {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+
+.score-input img {
+  width: 15%;
+}
+
+.div-table {
+  padding-bottom: 10rem;
+}
+
+/* NAV TABS */
+
+.tabs {
+  transform: none;
+  margin-bottom: 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.tabs-item {
+  font-size: 1rem;
+  padding: 0 0.5rem 1rem 0.5rem;
+  text-align: center;
+  color: white;
+}
+
+.tabs-active {
+  border-bottom: solid 2px white;
 }
 
 /* TOGGLE BTN */
@@ -427,7 +642,7 @@ export default {
 .switch-match,
 .game-match {
   position: fixed;
-  display: flex;
+  display: none;
   justify-content: center;
   align-items: center;
   right: 1.5rem;
@@ -437,6 +652,7 @@ export default {
   height: 3rem;
   background-color: var(--primary-color);
   z-index: 10;
+  font-size: 1.2rem;
 }
 
 .edit-match {
@@ -468,7 +684,7 @@ export default {
   padding: 0.8rem;
   z-index: 10;
   transform: scale(1.1);
-  transform: rotate(0);
+  transform: rotate(-270deg);
   transition: transform 2s;
 }
 

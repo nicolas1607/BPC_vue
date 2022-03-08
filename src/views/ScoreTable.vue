@@ -37,12 +37,14 @@
                 <th>#</th>
                 <th>Équipe</th>
                 <th>Joueurs</th>
-                <th id="score-sortable">Score</th>
+                <th>V</th>
+                <th>D</th>
+                <th id="score-sortable">P</th>
               </tr>
             </thead>
             <tbody v-for="team in team" :key="team">
               <tr id="1" class="tr-elem">
-                <td>{{ team.name }}</td>
+                <td class="team-num">{{ team.name }}</td>
                 <td>{{ team.value[0] }}</td>
                 <td v-if="team.value[1].length != 0">
                   <span v-for="player in team.value[1]" :key="player">
@@ -50,6 +52,8 @@
                   </span>
                 </td>
                 <td v-else>/</td>
+                <th>{{ team.value[3] }}</th>
+                <th>{{ team.value[4] }}</th>
                 <td v-if="team.value[2]" id="score-sortable">
                   {{ team.value[2] }}
                 </td>
@@ -93,7 +97,8 @@ export default {
       "https://www.kryogenix.org/code/browser/sorttable/sorttable.js"
     );
     document.head.appendChild(sortableScript);
-
+  },
+  updated() {
     this.sortedData();
   },
   methods: {
@@ -101,6 +106,10 @@ export default {
       this.team.sort(function (a, b) {
         return a["value"][2] > b["value"][2] ? -1 : 1;
       });
+      const teamNum = document.querySelectorAll(".team-num");
+      for (let i = 0; i < teamNum.length; i++) {
+        teamNum[i].innerHTML = i + 1;
+      }
     },
     hiddenMenu() {
       const menu = document.querySelector("#menu");

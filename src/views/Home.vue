@@ -1,30 +1,18 @@
 <template>
-  <div>
-    <div class="content">
-      <router-link
-        class="home animate__animated animate__rotateIn"
-        style="--animate-duration: 2s"
-        to="choices"
-      >
-        <img class="nav-home-img" :src="require(`../assets/logo.png`)" />
-      </router-link>
-    </div>
-    <!-- <div class="code">
-      <label for="code">ID</label>
-      <input type="text" name="code" class="form-control" />
-    </div> -->
+  <div class="content">
+    <router-link
+      class="home animate__animated animate__bounceIn animate__slow"
+      style="--animate-duration: 1.4s"
+      to="choices"
+    >
+      <img class="nav-home-img" :src="require(`../assets/logo.png`)" />
+    </router-link>
   </div>
-  <Footer />
 </template>
 
 <script>
-import Footer from "@/components/Footer.vue";
-
 export default {
   name: "Home",
-  components: {
-    Footer,
-  },
   mounted() {
     // INTEGER
     localStorage.teamId = 2;
@@ -53,6 +41,10 @@ export default {
     localStorage.loose = "0";
     localStorage.nbTables = "1";
     localStorage.nbCups = "6";
+  },
+  beforeUnmount() {
+    const home = document.querySelector(".home");
+    home.className = "home animate__animated animate__bounceOut";
   },
 };
 </script>

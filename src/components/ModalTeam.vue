@@ -13,7 +13,7 @@
       </div>
       <div class="alert-teams"></div>
       <div class="alert-btn">
-        <router-link to="/game" class="alert-submit">Commencer</router-link>
+        <router-link to="/game" class="team-button">Commencer</router-link>
         <button class="alert-cancel" @click="closeModalAlert()">Annuler</button>
       </div>
     </div>
@@ -61,10 +61,12 @@ export default {
   font-size: 1.2rem;
 }
 
-#modal-info-text {
+.alert-teams {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   color: white;
   font-size: 1rem;
-  padding: 2rem 0;
+  margin-top: 2rem;
 }
 
 #modal {
@@ -72,14 +74,24 @@ export default {
   position: absolute;
   top: auto;
   bottom: auto;
-  left: 8%;
-  width: 84%;
+  left: 5%;
+  width: 90%;
   padding: 2rem 2rem;
   border-radius: 0.2rem;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
+.alert-btn {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
 .alert-cancel {
-  width: 100%;
+  margin-top: 2rem;
+}
+
+.team-button {
+  background-color: #efefef;
 }
 </style>

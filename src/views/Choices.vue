@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="animate__animated animate__fadeIn animate__delay-1s">
     <ModalInfo />
     <ModalTeam />
 
@@ -17,11 +17,12 @@
     >
       <font-awesome-icon :icon="['fa', 'plus']" class="font-awesome-icon" />
     </a>
-    <font-awesome-icon
-      :icon="['fa', 'ellipsis-h']"
-      class="btn-toggle font-awesome-icon"
-      @click="displayBtn()"
-    />
+    <a class="btn-toggle" @click="displayBtn()">
+      <font-awesome-icon
+        :icon="['fa', 'ellipsis-h']"
+        class="font-awesome-icon"
+      />
+    </a>
 
     <div id="menu">
       <div class="nav-title">
@@ -260,8 +261,8 @@ export default {
           if (listPlayers[j].value != "")
             players.push(listPlayers[j].value + " ");
         }
-        if (teamName != "") team.set(i, [teamName, players, 0]);
-        else team.set(i, ["Équipe n°" + i, players, 0]);
+        if (teamName != "") team.set(i, [teamName, players, 0, 0, 0]);
+        else team.set(i, ["Équipe n°" + i, players, 0, 0, 0]);
       }
       return team;
     },
@@ -289,60 +290,43 @@ export default {
 </script>
 
 <style scoped>
-.add-team-button {
-  position: fixed;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  bottom: 14rem;
-  right: 1.5rem;
-  border-radius: 10rem;
-  box-shadow: 2px 2px 10px 3px rgba(0, 0, 0, 0.2);
-  width: 3rem;
-  height: 3rem;
-  background-color: var(--primary-color);
-  z-index: 10;
-}
-
+.add-team-button,
+.btn-toggle,
 .go {
   position: fixed;
   display: flex;
   justify-content: center;
   align-items: center;
-  bottom: 10rem;
   right: 1.5rem;
-  font-size: 1.2rem;
-  box-shadow: 2px 2px 10px 3px rgba(0, 0, 0, 0.2);
-  background-color: var(--primary-color);
   border-radius: 10rem;
-  height: 3rem;
+  box-shadow: 2px 2px 10px 3px rgba(0, 0, 0, 0.2);
   width: 3rem;
+  height: 3rem;
+  background-color: var(--primary-color);
   z-index: 10;
+  color: white;
 }
 
-.btn-toggle {
-  position: fixed;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  bottom: 6rem;
-  color: white;
-  right: 1.5rem;
+.add-team-button {
+  bottom: 14rem;
+}
+
+.go {
+  bottom: 10rem;
   font-size: 1.2rem;
-  box-shadow: 2px 2px 10px 3px rgba(0, 0, 0, 0.2);
-  background-color: var(--primary-color);
-  border-radius: 10rem;
-  height: 3rem;
-  width: 3rem;
-  padding: 0.8rem;
-  z-index: 10;
-  transform: scale(1.1);
-  transform: rotate(0);
-  transition: transform 2s;
 }
 
 .go a {
   margin-left: 0.2rem;
+}
+
+.btn-toggle {
+  bottom: 6rem;
+  font-size: 1.2rem;
+  padding: 0.8rem;
+  transform: scale(1.1);
+  transform: rotate(0);
+  transition: transform 2s;
 }
 
 .skewed-param {

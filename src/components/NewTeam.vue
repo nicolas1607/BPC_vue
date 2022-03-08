@@ -1,7 +1,7 @@
 <template>
   <div class="team animate__animated animate__fadeInUp">
     <div :id="'team' + id" class="team-class">
-      <a :id="'remove-team' + id" class="remove-team" @click="removeTeam()">
+      <a :id="'remove-team' + id" class="remove-team" @click="removeTeam(id)">
         <font-awesome-icon :icon="['fa', 'times']" class="font-awesome-icon" />
       </a>
       <div class="team-label team-name">
@@ -11,7 +11,7 @@
           :aria-label="'Nom d\'équipe n°' + id"
           name="team-name"
           :placeholder="'Nom d\'équipe n°' + id"
-          maxlength="15"
+          maxlength="14"
         />
       </div>
       <section class="curved"></section>
@@ -30,7 +30,6 @@
 </template>
 
 <script>
-import Choices from "../views/Choices.vue";
 import NewTeamPlayer from "./NewTeamPlayer.vue";
 
 export default {
@@ -38,7 +37,6 @@ export default {
   props: ["id", "remove"],
   components: {
     NewTeamPlayer,
-    Choices,
   },
   data() {
     return {
@@ -56,23 +54,22 @@ export default {
       localStorage.nbTeam--;
       localStorage.teamId--;
       this.$el.className = "animate__animated animate__fadeOutRight";
-      this.$el.style.display = "none";
       this.$el.style.display = "block";
       setTimeout(() => {
         this.$el.remove();
+        const teams = document.querySelectorAll(".team-class");
+        for (let i = 1; i <= teams.length; i++) {
+          teams[i - 1].id = "team" + i;
+          teams[i - 1].querySelector(".team-input").id = "team-input" + i;
+          teams[i - 1].querySelector(".team-input").placeholder =
+            "Nom d'équipe n°" + i;
+          teams[i - 1].querySelector(".team-input").ariaLabel =
+            "Nom d'équipe n°" + i;
+          teams[i - 1].querySelector(".team-button").id = "button" + i;
+          teams[i - 1].querySelector(".remove-team").id = "remove-team" + i;
+          teams[i - 1].querySelectorAll(".team-label")[1].id = "players" + i;
+        }
       }, 800);
-      const teams = document.querySelectorAll(".team-class");
-      for (let i = 0; i < teams.length; i++) {
-        teams[i].id = "team" + (i + 1);
-        teams[i].querySelector(".team-input").id = "team-input" + (i + 1);
-        teams[i].querySelector(".team-input").placeholder =
-          "Nom d'équipe n°" + (i + 1);
-        teams[i].querySelector(".team-input").ariaLabel =
-          "Nom d'équipe n°" + (i + 1);
-        teams[i].querySelector(".team-button").id = "button" + (i + 1);
-        teams[i].querySelector(".remove-team").id = "remove-team" + (i + 1);
-        teams[i].querySelectorAll(".team-label")[1].id = "players" + (i + 1);
-      }
     },
   },
 };
@@ -141,6 +138,8 @@ export default {
 .team-label {
   margin: auto;
   z-index: 2;
+  display: flex;
+  justify-content: center;
 }
 
 .team-input {
